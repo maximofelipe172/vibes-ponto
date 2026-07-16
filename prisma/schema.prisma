@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Perfil de acesso. As permissões de cada papel ficam centralizadas em
+/// `lib/rbac/permissions.ts` — para adicionar RH/Supervisor/Gestor basta
+/// incluir o valor aqui e mapear as permissões lá.
+enum Role {
+  admin
+  employee
+
+  // `role` é palavra reservada no PostgreSQL — daí o nome do tipo.
+  @@map("user_role")
+}
+
+/// Usuário inativo mantém o histórico, mas não consegue autenticar.
+enum UserStatus {
+  active
+  inactive
+
+  @@map("user_status")
+}
+
+/// Perfil do colaborador.
+///
+/// A senha NÃO é armazenada aqui — o hash é responsabilidade do Supabase
+/// Auth (`auth.users`). O perfil é resolvido pelo e-mail da sessão, então
+/// o `id` é independente do id de `auth.users`.
+model Profile {
+  id           String       @id @default(uuid()) @db.Uuid
+  nome         String
+  email        String       @unique
+  role         Role         @default(employee)
+  status       UserStatus   @default(active)
+  avatarUrl    String?      @map("avatar_url")
+  cargo        String?
+  departamento String?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  timeRecords  TimeRecord[]
+
+  @@index([role, status])
+  @@map("profiles")
+}
+
+/// Um registro de ponto por dia: `entrada` é preenchida no clock-in e
+/// `saida` no clock-out do mesmo registro.
+model TimeRecord {
+  id        String    @id @default(uuid()) @db.Uuid
+  profileId String    @map("profile_id") @db.Uuid
+  entrada   DateTime
+  saida     DateTime?
+  createdAt DateTime  @default(now()) @map("created_at")
+  profile   Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, entrada])
+  @@map("time_records")
+}

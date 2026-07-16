@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx tsc --noEmit; if \\($?\\) { npm run build })",
+      "PowerShell(Get-Process node -ErrorAction SilentlyContinue | Select-Object Id, StartTime; try { Remove-Item -Recurse -Force .next -ErrorAction Stop } catch { \"remove failed: $_\" })",
+      "PowerShell(Stop-Process -Id 1512,4736,12648 -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; $env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm run build)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm run dev)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; docker --version; wsl --status)",
+      "PowerShell($k = Get-Clipboard -Raw -ErrorAction SilentlyContinue; if \\($k -and $k.Trim\\(\\).StartsWith\\(\"sb_secret_\"\\)\\) { $env = Get-Content \".env\" -Raw; $env = $env -replace 'SUPABASE_SERVICE_ROLE_KEY=\"sua-service-role-key\"', \\('SUPABASE_SERVICE_ROLE_KEY=\"' + $k.Trim\\(\\) + '\"'\\); Set-Content \".env\" -Value $env -Encoding utf8 -NoNewline; \"OK: secret key gravada no .env \\(nao exibida\\)\" } else { \"clipboard nao contem sb_secret_ \\(contem: \" + $\\(if \\($k\\) { $k.Substring\\(0, [Math]::Min\\(12, $k.Length\\)\\) + \"...\" } else { \"vazio\" }\\) + \"\\)\" })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx prisma db push)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm run db:seed)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; \"cleared\")",
+      "Bash(rm -f app/api/auth/send-otp/route.ts app/api/auth/verify-otp/route.ts components/ui/input-otp.tsx lib/otp.ts lib/otp-constants.ts lib/validations.ts)",
+      "Bash(rmdir app/api/auth/send-otp app/api/auth/verify-otp app/api/auth)",
+      "Bash(rmdir app/api)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx prisma db push; if \\($?\\) { npx tsc --noEmit })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; npx prisma db push --accept-data-loss; if \\($?\\) { npx tsc --noEmit })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; try { Remove-Item -Recurse -Force .next -ErrorAction Stop } catch { \"no .next\" }; npx tsc --noEmit; if \\($?\\) { \"TYPECHECK OK\" })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm run db:seed; if \\($?\\) { npm run build })",
+      "mcp__claude-in-chrome__list_connected_browsers",
+      "Bash(rm -f app/auth/callback/route.ts)",
+      "Bash(rmdir app/auth/callback app/auth)",
+      "Bash(mkdir -p app/api/auth/send-otp app/api/auth/verify-otp)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; npm install --no-audit --no-fund 2>&1 | Select-Object -Last 3; npx prisma db push --accept-data-loss 2>&1 | Select-Object -Last 4)",
+      "Bash(rm -f app/api/auth/send-otp/route.ts app/api/auth/verify-otp/route.ts components/ui/input-otp.tsx lib/otp.ts lib/otp-constants.ts)",
+      "Bash(rmdir app/api/auth/send-otp app/api/auth/verify-otp)",
+      "Bash(mkdir -p app/api/auth/signup app/api/auth/login app/api/auth/forgot-password app/auth/callback components/auth)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx tsx \"C:\\\\Users\\\\felie\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-felie-app-ponto\\\\08335b4d-4a94-4eae-b62b-7a57f5051be7\\\\scratchpad\\\\purge-auth-users.ts\")",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm install --no-audit --no-fund 2>&1 | Select-Object -Last 2; npx prisma db push --accept-data-loss 2>&1 | Select-String -Pattern \"sync|Error|error\" | Select-Object -First 5)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npm run db:seed; try { Remove-Item -Recurse -Force .next -ErrorAction Stop } catch {}; npx tsc --noEmit; if \\($?\\) { \"=== TYPECHECK OK ===\" })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx tsc --noEmit; if \\($?\\) { \"=== TYPECHECK OK ===\" } else { \"TYPECHECK FALHOU\" })",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;$env:Path\"; npx tsc --noEmit 2>&1 | Select-Object -First 15)"
+    ]
+  }
+}
