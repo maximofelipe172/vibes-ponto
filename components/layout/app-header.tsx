@@ -40,12 +40,9 @@ export function AppHeader({ profile }: { profile: Profile }) {
           <Link
             href="/dashboard"
             aria-label="Vibes Ponto — início"
-            className="flex items-center gap-2"
+            className="flex items-center"
           >
             <VibesLogo className="h-6" />
-            <span className="text-lg font-semibold tracking-tight text-muted-foreground">
-              Ponto
-            </span>
           </Link>
         </div>
 
