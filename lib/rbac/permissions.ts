@@ -33,7 +33,6 @@ export const PERMISSIONS = [
   "user:changeStatus",
   "user:delete",
   // Áreas administrativas
-  "reports:read",
   "settings:manage",
 ] as const;
 
@@ -67,7 +66,6 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "user:changeRole",
     "user:changeStatus",
     "user:delete",
-    "reports:read",
     "settings:manage",
   ],
   employee: COLLABORATOR_PERMISSIONS,

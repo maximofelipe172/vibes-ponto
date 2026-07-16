@@ -19,19 +19,17 @@ interface SearchFiltersProps {
   searchPlaceholder: string;
   /** Selects extras (ex.: tipo, status). */
   selects?: FilterSelect[];
-  /** Inclui o filtro por data (?data=YYYY-MM-DD). */
-  withDate?: boolean;
 }
 
 /**
  * Barra de pesquisa + filtros refletidos na URL, reutilizada nas telas
- * de usuários e de relatórios. A busca tem debounce; os selects aplicam
- * na hora.
+ * de usuários e do painel admin. A busca tem debounce; os selects
+ * aplicam na hora. Demais parâmetros da URL (ex.: período) são
+ * preservados.
  */
 export function SearchFilters({
   searchPlaceholder,
   selects = [],
-  withDate = false,
 }: SearchFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -66,12 +64,11 @@ export function SearchFilters({
 
   const hasFilters =
     !!searchParams.get("q") ||
-    !!searchParams.get("data") ||
     selects.some((select) => !!searchParams.get(select.name));
 
   function clearAll() {
     setQuery("");
-    const cleared: Record<string, string> = { q: "", data: "" };
+    const cleared: Record<string, string> = { q: "" };
     selects.forEach((select) => (cleared[select.name] = ""));
     applyParams(cleared);
   }
@@ -108,16 +105,6 @@ export function SearchFilters({
           ))}
         </Select>
       ))}
-
-      {withDate && (
-        <Input
-          type="date"
-          value={searchParams.get("data") ?? ""}
-          onChange={(e) => applyParams({ data: e.target.value })}
-          className="sm:w-44"
-          aria-label="Filtrar por data"
-        />
-      )}
 
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={clearAll}>

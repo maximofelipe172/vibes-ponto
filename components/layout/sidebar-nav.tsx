@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FileText,
   History,
   LayoutDashboard,
+  Loader2,
   Settings,
   Shield,
   User,
@@ -20,11 +21,25 @@ const ICONS: Record<NavItem["icon"], LucideIcon> = {
   LayoutDashboard,
   History,
   Users,
-  FileText,
   Settings,
   User,
   Shield,
 };
+
+/**
+ * Ícone do item: vira spinner enquanto a navegação está em andamento.
+ * `useLinkStatus` só funciona dentro de um <Link>.
+ */
+function NavIcon({ icon }: { icon: NavItem["icon"] }) {
+  const { pending } = useLinkStatus();
+  const Icon = ICONS[icon];
+
+  return pending ? (
+    <Loader2 className="size-4 shrink-0 animate-spin" />
+  ) : (
+    <Icon className="size-4 shrink-0" />
+  );
+}
 
 interface SidebarNavProps {
   items: NavItem[];
@@ -39,7 +54,6 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
   return (
     <nav className="flex flex-col gap-1">
       {items.map((item) => {
-        const Icon = ICONS[item.icon];
         const active =
           pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -48,6 +62,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
             key={item.href}
             href={item.href}
             onClick={onNavigate}
+            prefetch
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
@@ -56,7 +71,7 @@ export function SidebarNav({ items, onNavigate }: SidebarNavProps) {
                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
-            <Icon className="size-4 shrink-0" />
+            <NavIcon icon={item.icon} />
             {item.label}
           </Link>
         );

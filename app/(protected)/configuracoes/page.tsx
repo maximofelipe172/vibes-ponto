@@ -42,7 +42,6 @@ const PERMISSION_LABELS: Record<Permission, string> = {
   "user:changeRole": "Alterar o tipo de usuário",
   "user:changeStatus": "Ativar/desativar usuários",
   "user:delete": "Excluir usuários",
-  "reports:read": "Acessar relatórios",
   "settings:manage": "Gerenciar configurações",
 };
 

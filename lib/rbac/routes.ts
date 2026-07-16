@@ -16,7 +16,6 @@ interface ProtectedRoute {
 export const PROTECTED_ROUTES: readonly ProtectedRoute[] = [
   { prefix: "/admin", permission: "timeRecord:readAll" },
   { prefix: "/usuarios", permission: "user:read" },
-  { prefix: "/relatorios", permission: "reports:read" },
   { prefix: "/configuracoes", permission: "settings:manage" },
 ];
 

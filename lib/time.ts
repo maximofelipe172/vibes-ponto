@@ -56,6 +56,70 @@ export function formatFullDate(date: Date): string {
   });
 }
 
+/** Partes da data (no fuso de São Paulo) de um instante. */
+export function dateParts(date: Date = new Date()): {
+  dia: number;
+  mes: number;
+  ano: number;
+} {
+  const [ano, mes, dia] = toIsoDate(date).split("-").map(Number);
+  return { dia, mes, ano };
+}
+
+/**
+ * Intervalo [início, fim) para um período flexível no fuso de São Paulo.
+ *
+ * - dia + mês + ano → aquele dia
+ * - mês + ano       → o mês inteiro
+ * - só ano          → o ano inteiro
+ */
+export function periodRange(period: {
+  dia?: number | null;
+  mes?: number | null;
+  ano: number;
+}): { start: Date; end: Date } {
+  const { dia, mes, ano } = period;
+
+  if (mes && dia) {
+    const start = new Date(Date.UTC(ano, mes - 1, dia, UTC_OFFSET_HOURS));
+    return { start, end: new Date(start.getTime() + 24 * MS_PER_HOUR) };
+  }
+
+  if (mes) {
+    return {
+      start: new Date(Date.UTC(ano, mes - 1, 1, UTC_OFFSET_HOURS)),
+      end: new Date(Date.UTC(ano, mes, 1, UTC_OFFSET_HOURS)),
+    };
+  }
+
+  return {
+    start: new Date(Date.UTC(ano, 0, 1, UTC_OFFSET_HOURS)),
+    end: new Date(Date.UTC(ano + 1, 0, 1, UTC_OFFSET_HOURS)),
+  };
+}
+
+/** Quantidade de dias de um mês (para montar o seletor de dia). */
+export function daysInMonth(mes: number, ano: number): number {
+  return new Date(Date.UTC(ano, mes, 0)).getUTCDate();
+}
+
+/** Rótulo legível do período selecionado. */
+export function periodLabel(period: {
+  dia?: number | null;
+  mes?: number | null;
+  ano: number;
+}): string {
+  const { dia, mes, ano } = period;
+  const meses = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+  ];
+
+  if (mes && dia) return `${String(dia).padStart(2, "0")}/${String(mes).padStart(2, "0")}/${ano}`;
+  if (mes) return `${meses[mes - 1]} de ${ano}`;
+  return String(ano);
+}
+
 /** Duração entre entrada e saída no formato "8h 15min". */
 export function formatDuration(entrada: Date, saida: Date | null): string {
   if (!saida) return "—";

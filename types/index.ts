@@ -34,6 +34,26 @@ export interface TimeRecordRow {
   colaborador?: string;
 }
 
+/** Pessoa listada ao abrir um card de indicador. */
+export interface StatPerson {
+  id: string;
+  nome: string;
+  email: string;
+  role: Role;
+  /** Informação contextual (ex.: horário de entrada). */
+  detalhe?: string;
+}
+
+/** Card de indicador do painel, com as pessoas que ele conta. */
+export interface StatCardData {
+  key: string;
+  label: string;
+  value: number;
+  description: string;
+  icon: "Users" | "Shield" | "CheckCircle2" | "UserX" | "UserPlus";
+  pessoas: StatPerson[];
+}
+
 /** Usuário serializado para a tela de gestão. */
 export interface UserRow {
   id: string;
