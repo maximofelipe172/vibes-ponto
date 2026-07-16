@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+import { siteUrl } from "@/lib/env";
 import { forgotPasswordSchema } from "@/lib/validations";
 import type { AuthResponse } from "@/types";
 
@@ -22,11 +23,11 @@ export async function POST(request: Request) {
   }
 
   const { email } = parsed.data;
-  const origin = new URL(request.url).origin;
+  const base = siteUrl(new URL(request.url).origin);
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/redefinir-senha`,
+    redirectTo: `${base}/auth/callback?next=/redefinir-senha`,
   });
 
   if (error) {

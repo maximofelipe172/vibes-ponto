@@ -40,3 +40,29 @@ export function supabaseServiceRoleKey(): string {
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 }
+
+/**
+ * URL pública e canônica do site — base dos links enviados por e-mail
+ * (ex.: redefinição de senha).
+ *
+ * Não derivamos da requisição porque, na Vercel, cada deploy tem uma URL
+ * própria (`vibes-ponto-abc123-org.vercel.app`). Um link apontando para
+ * ela seria rejeitado pela lista de "Redirect URLs" do Supabase, que
+ * silenciosamente cai no Site URL — e o e-mail chega com um link errado.
+ *
+ * Ordem: NEXT_PUBLIC_SITE_URL → domínio de produção da Vercel → origem
+ * da requisição (desenvolvimento local).
+ */
+export function siteUrl(requestOrigin?: string): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/+$/, "");
+
+  const vercelProduction = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelProduction) return `https://${vercelProduction}`;
+
+  if (requestOrigin) return requestOrigin;
+
+  throw new Error(
+    "Não foi possível determinar a URL do site. Configure NEXT_PUBLIC_SITE_URL."
+  );
+}
