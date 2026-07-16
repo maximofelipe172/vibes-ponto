@@ -1,6 +1,8 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+import { supabasePublicEnv } from "@/lib/env";
+
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 /**
@@ -13,29 +15,26 @@ type CookieToSet = { name: string; value: string; options: CookieOptions };
  */
 export async function createClient(persistSession = true) {
   const cookieStore = await cookies();
+  const { url, anonKey } = supabasePublicEnv();
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet: CookieToSet[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              const cookieOptions = persistSession
-                ? options
-                : { ...options, maxAge: undefined, expires: undefined };
-              cookieStore.set(name, value, cookieOptions);
-            });
-          } catch {
-            // Chamado a partir de um Server Component — pode ser ignorado
-            // quando o middleware está atualizando a sessão.
-          }
-        },
+  return createServerClient(url, anonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet: CookieToSet[]) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            const cookieOptions = persistSession
+              ? options
+              : { ...options, maxAge: undefined, expires: undefined };
+            cookieStore.set(name, value, cookieOptions);
+          });
+        } catch {
+          // Chamado a partir de um Server Component — pode ser ignorado
+          // quando o middleware está atualizando a sessão.
+        }
+      },
+    },
+  });
 }

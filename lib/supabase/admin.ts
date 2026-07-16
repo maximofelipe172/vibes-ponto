@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
+import { supabasePublicEnv, supabaseServiceRoleKey } from "@/lib/env";
+
 /**
  * Cliente administrativo do Supabase (service role).
  *
@@ -12,9 +14,8 @@ import { createClient } from "@supabase/supabase-js";
  * automático sem depender de e-mail de confirmação.
  */
 export function createAdminClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const { url } = supabasePublicEnv();
+  return createClient(url, supabaseServiceRoleKey(), {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 }
