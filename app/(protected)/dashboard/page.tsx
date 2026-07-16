@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+import { ElapsedTime } from "@/components/elapsed-time";
 import { LiveClock } from "@/components/live-clock";
 import { PunchButton } from "@/components/punch-button";
 import { RecordsTable } from "@/components/records-table";
@@ -16,8 +17,8 @@ import {
 } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { formatDuration, formatFullDate, formatTime, todayRange } from "@/lib/time";
-import { formatMinutes, toRecordRows, totalMinutes } from "@/lib/records";
+import { formatFullDate, formatTime, todayRange } from "@/lib/time";
+import { toRecordRows } from "@/lib/records";
 import type { DayStatus } from "@/types";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -72,9 +73,7 @@ export default async function DashboardPage() {
 
   const statusInfo = STATUS_INFO[status];
   const firstName = profile.nome.split(" ")[0];
-  const horasHoje = todayRecord
-    ? formatDuration(todayRecord.entrada, todayRecord.saida)
-    : "—";
+  const horasEmAndamento = status === "TRABALHANDO";
 
   return (
     <div className="flex flex-col gap-6">
@@ -108,7 +107,20 @@ export default async function DashboardPage() {
             label: "Saída",
             value: todayRecord?.saida ? formatTime(todayRecord.saida) : "—",
           },
-          { label: "Horas trabalhadas hoje", value: horasHoje },
+          {
+            label: horasEmAndamento
+              ? "Trabalhando há"
+              : "Horas trabalhadas hoje",
+            // Com o expediente aberto, conta ao vivo desde a entrada.
+            value: todayRecord ? (
+              <ElapsedTime
+                entrada={todayRecord.entrada.toISOString()}
+                saida={todayRecord.saida?.toISOString() ?? null}
+              />
+            ) : (
+              "—"
+            ),
+          },
         ].map((item, index) => (
           <Card
             key={item.label}
@@ -117,9 +129,9 @@ export default async function DashboardPage() {
           >
             <CardContent className="flex flex-col gap-1 p-6">
               <p className="text-sm text-muted-foreground">{item.label}</p>
-              <p className="font-mono text-2xl font-semibold tabular-nums">
+              <div className="font-mono text-2xl font-semibold tabular-nums">
                 {item.value}
-              </p>
+              </div>
             </CardContent>
           </Card>
         ))}
