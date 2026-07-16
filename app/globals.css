@@ -2,6 +2,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * ── Marca Vibes ────────────────────────────────────────────────────────
+ * Extraídas do gradiente da logo oficial. A arte visível vai de rosa
+ * (#DA3363) a laranja (#F1623B/#FEBF38); o grafite é a ponta escura do
+ * mesmo gradiente e serve de contraponto sóbrio.
+ */
+:root {
+  --brand-pink: #da3363;
+  --brand-orange: #f1623b;
+  --brand-amber: #febf38;
+  --brand-graphite: #373535;
+  /* Mesma direção do gradiente da logo (diagonal). */
+  --brand-gradient: linear-gradient(
+    135deg,
+    var(--brand-pink) 0%,
+    var(--brand-orange) 65%,
+    var(--brand-amber) 100%
+  );
+}
+
 :root {
   --background: oklch(0.99 0 0);
   --foreground: oklch(0.145 0 0);
@@ -9,7 +29,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  /* Rosa da marca. Com texto branco atinge 4.53:1 — passa em WCAG AA. */
+  --primary: var(--brand-pink);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -23,7 +44,7 @@
   --success-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: var(--brand-pink);
   --radius: 0.625rem;
 }
 
@@ -34,8 +55,9 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.185 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* A marca é a mesma nos dois temas — o rosa se sustenta no escuro. */
+  --primary: var(--brand-pink);
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -48,10 +70,14 @@
   --success-foreground: oklch(0.145 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: var(--brand-pink);
 }
 
 @theme inline {
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-amber: var(--brand-amber);
+  --color-brand-graphite: var(--brand-graphite);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -98,5 +124,20 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  /* Gradiente da marca, na mesma diagonal da logo. */
+  .bg-brand-gradient {
+    background-image: var(--brand-gradient);
+  }
+
+  /* Texto preenchido com o gradiente da marca. */
+  .text-brand-gradient {
+    background-image: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }

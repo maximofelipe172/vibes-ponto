@@ -11,6 +11,17 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+        /** Ação principal da marca — gradiente da logo (rosa → âmbar). */
+        brand:
+          "bg-brand-gradient text-white shadow-sm hover:brightness-105",
+        /**
+         * Grafite da marca (ponta escura do gradiente da logo). Usado no
+         * encerramento do expediente: o rosa da marca e o vermelho de
+         * "destructive" são vizinhos demais para diferenciar entrada de
+         * saída num relance.
+         */
+        graphite:
+          "bg-brand-graphite text-white shadow-sm hover:bg-brand-graphite/90",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:

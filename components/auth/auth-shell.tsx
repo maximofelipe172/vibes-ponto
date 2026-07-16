@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Clock } from "lucide-react";
 
+import { VibesLogo } from "@/components/vibes-logo";
 import {
   Card,
   CardContent,
@@ -28,13 +28,12 @@ export function AuthShell({
     <main className="flex min-h-dvh flex-col items-center justify-center gap-6 p-4">
       <Link
         href="/"
-        className="flex flex-col items-center gap-2 animate-fade-in-up"
+        aria-label="Vibes Ponto — início"
+        className="flex flex-col items-center gap-1.5 animate-fade-in-up"
       >
-        <span className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-          <Clock className="size-6" />
-        </span>
-        <span className="text-2xl font-semibold tracking-tight">
-          Vibes Ponto
+        <VibesLogo className="h-11" />
+        <span className="text-sm font-medium tracking-[0.2em] text-muted-foreground uppercase">
+          Ponto
         </span>
       </Link>
 

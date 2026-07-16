@@ -69,7 +69,9 @@ export function PunchButton({ status }: PunchButtonProps) {
       size="lg"
       onClick={handlePunch}
       disabled={loading}
-      variant={isEntrada ? "default" : "destructive"}
+      // Entrada: gradiente da marca. Saída: grafite — cores opostas do
+      // mesmo gradiente, impossíveis de confundir num relance.
+      variant={isEntrada ? "brand" : "graphite"}
       className="w-full sm:w-auto"
     >
       {loading ? <Loader2 className="animate-spin" /> : isEntrada ? <LogIn /> : <LogOut />}

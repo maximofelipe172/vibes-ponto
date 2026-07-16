@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ChevronDown, Clock } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { Profile } from "@prisma/client";
+
+import { VibesLogo } from "@/components/vibes-logo";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,12 +39,13 @@ export function AppHeader({ profile }: { profile: Profile }) {
           <MobileNav items={items} />
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 font-semibold"
+            aria-label="Vibes Ponto — início"
+            className="flex items-center gap-2"
           >
-            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Clock className="size-4" />
+            <VibesLogo className="h-6" />
+            <span className="text-lg font-semibold tracking-tight text-muted-foreground">
+              Ponto
             </span>
-            <span className="hidden sm:inline">Vibes Ponto</span>
           </Link>
         </div>
 
