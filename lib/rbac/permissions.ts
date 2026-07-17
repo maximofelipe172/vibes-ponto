@@ -34,6 +34,7 @@ export const PERMISSIONS = [
   "user:delete",
   // Áreas administrativas
   "settings:manage",
+  "companyLocation:manage",
 ] as const;
 
 export type Permission = (typeof PERMISSIONS)[number];
@@ -67,6 +68,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "user:changeStatus",
     "user:delete",
     "settings:manage",
+    "companyLocation:manage",
   ],
   employee: COLLABORATOR_PERMISSIONS,
 };

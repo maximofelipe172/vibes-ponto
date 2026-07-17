@@ -24,6 +24,18 @@ export interface ClockResponse {
   };
 }
 
+/** Prova de onde uma batida foi feita. */
+export interface PunchLocation {
+  latitude: number;
+  longitude: number;
+  /** Precisão do GPS, formatada (ex.: "12 m"). */
+  accuracy: string | null;
+  /** Distância até a empresa, formatada (ex.: "28 m"). */
+  distance: string | null;
+  device: string | null;
+  mapUrl: string;
+}
+
 /** Registro de ponto serializado para exibição em tabelas. */
 export interface TimeRecordRow {
   id: string;
@@ -32,6 +44,9 @@ export interface TimeRecordRow {
   saida: string;
   total: string;
   colaborador?: string;
+  /** Localização de cada batida (null quando registrada sem geofencing). */
+  entradaLocal?: PunchLocation | null;
+  saidaLocal?: PunchLocation | null;
 }
 
 /** Pessoa listada ao abrir um card de indicador. */

@@ -7,6 +7,7 @@ import {
   History,
   LayoutDashboard,
   Loader2,
+  MapPin,
   Settings,
   Shield,
   User,
@@ -24,6 +25,7 @@ const ICONS: Record<NavItem["icon"], LucideIcon> = {
   Settings,
   User,
   Shield,
+  MapPin,
 };
 
 /**

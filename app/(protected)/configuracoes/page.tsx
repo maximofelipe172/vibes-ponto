@@ -43,6 +43,7 @@ const PERMISSION_LABELS: Record<Permission, string> = {
   "user:changeStatus": "Ativar/desativar usuários",
   "user:delete": "Excluir usuários",
   "settings:manage": "Gerenciar configurações",
+  "companyLocation:manage": "Definir a localização da empresa",
 };
 
 const ROLES = Object.keys(ROLE_PERMISSIONS) as Role[];

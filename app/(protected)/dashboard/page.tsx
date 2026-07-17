@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import { ElapsedTime } from "@/components/elapsed-time";
 import { LiveClock } from "@/components/live-clock";
-import { PunchButton } from "@/components/punch-button";
+import { PunchPanel } from "@/components/punch-panel";
 import { RecordsTable } from "@/components/records-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
   const profile = await requireUser();
   const { start, end } = todayRange();
 
-  const [todayRecord, recent] = await Promise.all([
+  const [todayRecord, recent, empresa] = await Promise.all([
     prisma.timeRecord.findFirst({
       where: { profileId: profile.id, entrada: { gte: start, lt: end } },
       orderBy: { entrada: "desc" },
@@ -63,7 +63,17 @@ export default async function DashboardPage() {
       orderBy: { entrada: "desc" },
       take: 5,
     }),
+    prisma.companyLocation.findFirst(),
   ]);
+
+  // null = geofencing desligado (nenhuma área cadastrada).
+  const geofence = empresa
+    ? {
+        latitude: empresa.latitude,
+        longitude: empresa.longitude,
+        radiusMeters: empresa.radiusMeters,
+      }
+    : null;
 
   const status: DayStatus = !todayRecord
     ? "SEM_REGISTRO"
@@ -93,7 +103,7 @@ export default async function DashboardPage() {
               {statusInfo.label}
             </Badge>
           </div>
-          <PunchButton status={status} />
+          <PunchPanel status={status} geofence={geofence} />
         </CardContent>
       </Card>
 

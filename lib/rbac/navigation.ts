@@ -11,7 +11,7 @@ export interface NavItem {
   href: string;
   label: string;
   /** Nome do ícone em `lucide-react` (resolvido no componente). */
-  icon: "LayoutDashboard" | "History" | "Users" | "Settings" | "User" | "Shield";
+  icon: "LayoutDashboard" | "History" | "Users" | "Settings" | "User" | "Shield" | "MapPin";
   /** null = basta estar autenticado. */
   permission: Permission | null;
 }
@@ -23,6 +23,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { href: "/historico", label: "Histórico", icon: "History", permission: null },
   { href: "/admin", label: "Painel Admin", icon: "Shield", permission: "timeRecord:readAll" },
   { href: "/usuarios", label: "Usuários", icon: "Users", permission: "user:read" },
+  { href: "/localizacao", label: "Localização", icon: "MapPin", permission: "companyLocation:manage" },
   { href: "/configuracoes", label: "Configurações", icon: "Settings", permission: "settings:manage" },
   { href: "/perfil", label: "Perfil", icon: "User", permission: null },
 ];

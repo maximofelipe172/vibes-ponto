@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { MAX_RADIUS_M, MIN_RADIUS_M } from "@/lib/geo";
+
 /** Mínimo de caracteres exigido na senha. */
 export const MIN_PASSWORD_LENGTH = 8;
 
@@ -99,6 +101,40 @@ export const updateUserSchema = z.object({
   role: roleField,
   status: statusField,
 });
+
+// ── Geofencing ──────────────────────────────────────────────────────────
+
+const latitude = z
+  .number({ invalid_type_error: "Latitude inválida" })
+  .min(-90, "Latitude deve estar entre -90 e 90")
+  .max(90, "Latitude deve estar entre -90 e 90");
+
+const longitude = z
+  .number({ invalid_type_error: "Longitude inválida" })
+  .min(-180, "Longitude deve estar entre -180 e 180")
+  .max(180, "Longitude deve estar entre -180 e 180");
+
+/** Área autorizada da empresa (tela do administrador). */
+export const companyLocationSchema = z.object({
+  latitude,
+  longitude,
+  radiusMeters: z
+    .number({ invalid_type_error: "Informe o raio em metros" })
+    .int("O raio deve ser um número inteiro")
+    .min(MIN_RADIUS_M, `O raio mínimo é de ${MIN_RADIUS_M} metros`)
+    .max(MAX_RADIUS_M, `O raio máximo é de ${MAX_RADIUS_M} metros`),
+});
+
+/** Posição enviada ao bater o ponto. */
+export const punchLocationSchema = z.object({
+  latitude,
+  longitude,
+  /** Precisão do GPS em metros, informada pelo navegador. */
+  accuracy: z.number().nonnegative().optional(),
+});
+
+export type CompanyLocationInput = z.infer<typeof companyLocationSchema>;
+export type PunchLocationInput = z.infer<typeof punchLocationSchema>;
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
 export type SignInInput = z.infer<typeof signInSchema>;

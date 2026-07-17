@@ -7,12 +7,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { LocationDetails } from "@/components/records/location-details";
 import type { TimeRecordRow } from "@/types";
 
 interface RecordsTableProps {
   records: TimeRecordRow[];
   /** Exibe o colaborador (visões administrativas). */
   showCollaborator?: boolean;
+  /** Exibe a coluna de localização de cada batida. */
+  showLocation?: boolean;
   emptyMessage?: string;
 }
 
@@ -23,12 +26,13 @@ function EmAndamento() {
 /**
  * Registros de ponto.
  *
- * No celular vira uma lista de cards (tabela de 5 colunas não cabe em
- * 375px sem rolagem horizontal); a partir de `md` volta a ser tabela.
+ * No celular vira uma lista de cards (a tabela não cabe em 375px sem
+ * rolagem horizontal); a partir de `md` volta a ser tabela.
  */
 export function RecordsTable({
   records,
   showCollaborator = false,
+  showLocation = false,
   emptyMessage = "Nenhum registro encontrado.",
 }: RecordsTableProps) {
   if (records.length === 0) {
@@ -80,6 +84,12 @@ export function RecordsTable({
                 </div>
               ))}
             </dl>
+
+            {showLocation && (
+              <div className="flex justify-start border-t pt-2">
+                <LocationDetails record={record} />
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -94,6 +104,7 @@ export function RecordsTable({
               <TableHead>Entrada</TableHead>
               <TableHead>Saída</TableHead>
               <TableHead>Total de Horas</TableHead>
+              {showLocation && <TableHead>Localização</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -110,6 +121,11 @@ export function RecordsTable({
                   {record.saida === "—" ? <EmAndamento /> : record.saida}
                 </TableCell>
                 <TableCell className="tabular-nums">{record.total}</TableCell>
+                {showLocation && (
+                  <TableCell>
+                    <LocationDetails record={record} />
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

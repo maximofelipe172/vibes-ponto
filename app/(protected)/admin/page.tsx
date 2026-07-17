@@ -234,6 +234,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
           <RecordsTable
             records={toRecordRows(registrosTabela)}
             showCollaborator
+            showLocation
             emptyMessage={`Nenhum registro de ponto em ${label}.`}
           />
         </CardContent>

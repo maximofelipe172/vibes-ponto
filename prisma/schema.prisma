@@ -44,20 +44,59 @@ model Profile {
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
   timeRecords  TimeRecord[]
+  locationEdits CompanyLocation[]
 
   @@index([role, status])
   @@map("profiles")
 }
 
+/// Área autorizada para bater ponto (geofence).
+///
+/// Tabela de linha única: `id` fixo em `SINGLETON` garante isso no banco,
+/// em vez de depender de disciplina no código.
+///
+/// Enquanto NÃO existir uma linha aqui, o geofencing fica desligado e o
+/// ponto funciona normalmente — do contrário, publicar este recurso
+/// travaria a equipe inteira até alguém cadastrar a localização.
+model CompanyLocation {
+  id           String   @id @default("SINGLETON")
+  latitude     Float
+  longitude    Float
+  /// Raio de tolerância, em metros.
+  radiusMeters Int      @map("radius_meters")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  updatedById  String?  @map("updated_by_id") @db.Uuid
+  updatedBy    Profile? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("company_location")
+}
+
 /// Um registro de ponto por dia: `entrada` é preenchida no clock-in e
 /// `saida` no clock-out do mesmo registro.
+///
+/// Cada batida guarda a prova de onde foi feita: coordenadas, precisão
+/// do GPS, distância até a empresa (recalculada no servidor) e o
+/// dispositivo. Nulos nos registros anteriores ao geofencing.
 model TimeRecord {
   id        String    @id @default(uuid()) @db.Uuid
   profileId String    @map("profile_id") @db.Uuid
   entrada   DateTime
   saida     DateTime?
   createdAt DateTime  @default(now()) @map("created_at")
-  profile   Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  entradaLat      Float?  @map("entrada_lat")
+  entradaLng      Float?  @map("entrada_lng")
+  entradaAccuracy Float?  @map("entrada_accuracy")
+  entradaDistance Float?  @map("entrada_distance")
+  entradaDevice   String? @map("entrada_device")
+
+  saidaLat      Float?  @map("saida_lat")
+  saidaLng      Float?  @map("saida_lng")
+  saidaAccuracy Float?  @map("saida_accuracy")
+  saidaDistance Float?  @map("saida_distance")
+  saidaDevice   String? @map("saida_device")
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@index([profileId, entrada])
   @@map("time_records")
